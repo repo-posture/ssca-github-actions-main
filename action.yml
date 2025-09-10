@@ -1,0 +1,3 @@
+name: 'SLSA Verification'
+description: 'Github action to verify SLSA for a given artifact'
+author: 'Reetika Mallavarapu'
