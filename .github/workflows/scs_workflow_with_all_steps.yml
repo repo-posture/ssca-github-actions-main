@@ -3,6 +3,7 @@ name: Workflow for SBOM Generation and Verification, SLSA Generation and Verific
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   combined-workflow:
