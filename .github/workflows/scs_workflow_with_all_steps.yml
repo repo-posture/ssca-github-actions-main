@@ -59,6 +59,12 @@ jobs:
         run: |
           echo "VAULT_ADDR=${{ secrets.VAULT_URL }}" >> $GITHUB_ENV
           echo "VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}" >> $GITHUB_ENV
+      
+      - name: Test Vault Connectivity
+        run: |
+          echo "Testing Vault connection..."
+          curl -v --max-time 10 ${{ secrets.VAULT_URL }}/v1/sys/health || echo "Vault unreachable"
+      
       # Step 10: Run SBOM Generation Action
 
       - name: SBOM Generation
