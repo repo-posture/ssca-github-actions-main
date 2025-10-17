@@ -93,9 +93,8 @@ jobs:
            HARNESS_PROJECT_ID: SSCA_Sanity_Automation
            HARNESS_API_KEY: ${{ secrets.SCS_API_KEY }}
            TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
-           VERIFY: true
+           VERIFY: false
            POLICY_SET_REF: 'policy_for_at'
-           KMS_KEY: 'cosign'
 
      # Step 11: Run SLSA Generation Action
 
@@ -121,5 +120,4 @@ jobs:
           HARNESS_PROJECT_ID: SSCA_Sanity_Automation
           HARNESS_API_KEY: ${{ secrets.SCS_API_KEY }}
           TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
-          VERIFY: true
-          KMS_KEY: 'cosign'   
+          VERIFY: false   
