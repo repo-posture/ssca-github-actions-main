@@ -78,8 +78,7 @@ jobs:
           TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
           TOOL: Syft
           FORMAT: spdx-json
-          ATTEST: true
-          KMS_KEY: 'cosign'
+          ATTEST: false
     
 
           
@@ -109,8 +108,7 @@ jobs:
            HARNESS_PROJECT_ID: SSCA_Sanity_Automation
            HARNESS_API_KEY: ${{ secrets.SCS_API_KEY }}
            TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
-           ATTEST: true
-           KMS_KEY: 'cosign'  
+           ATTEST: false  
   
       # Step 12: Run SLSA Verification Action
 
