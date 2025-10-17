@@ -65,7 +65,36 @@ jobs:
           echo "Testing Vault connection..."
           curl -v --max-time 10 ${{ secrets.VAULT_URL }}/v1/sys/health || echo "Vault unreachable"
       
-      # Step 10: Run SBOM Generation Action
+
+
+     # Step 11: Run SLSA Generation Action
+
+      -  name: SLSA Provenance Generation
+         uses: harness/github-actions/slsa-generation@1.1.0
+         with:
+           HARNESS_ACCOUNT_URL: https://qa.harness.io
+           HARNESS_ACCOUNT_ID: ppbLW9YpRharzPs_JtWT7g
+           HARNESS_ORG_ID: SSCA
+           HARNESS_PROJECT_ID: SSCA_Sanity_Automation
+           HARNESS_API_KEY: ${{ secrets.SCS_API_KEY }}
+           TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
+           ATTEST: false  
+  
+      # Step 12: Run SLSA Verification Action
+
+      - name: SLSA Verification
+        uses: harness/github-actions/slsa-verification@1.1.0
+        with:
+          HARNESS_ACCOUNT_URL: https://qa.harness.io
+          HARNESS_ACCOUNT_ID: ppbLW9YpRharzPs_JtWT7g
+          HARNESS_ORG_ID: SSCA
+          HARNESS_PROJECT_ID: SSCA_Sanity_Automation
+          HARNESS_API_KEY: ${{ secrets.SCS_API_KEY }}
+          TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
+          VERIFY: false   
+
+
+            # Step 10: Run SBOM Generation Action
 
       - name: SBOM Generation
         uses: harness/github-actions/sbom-generation@1.1.0
@@ -94,30 +123,4 @@ jobs:
            HARNESS_API_KEY: ${{ secrets.SCS_API_KEY }}
            TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
            VERIFY: false
-           POLICY_SET_REF: 'policy_for_at'
-
-     # Step 11: Run SLSA Generation Action
-
-      -  name: SLSA Provenance Generation
-         uses: harness/github-actions/slsa-generation@1.1.0
-         with:
-           HARNESS_ACCOUNT_URL: https://qa.harness.io
-           HARNESS_ACCOUNT_ID: ppbLW9YpRharzPs_JtWT7g
-           HARNESS_ORG_ID: SSCA
-           HARNESS_PROJECT_ID: SSCA_Sanity_Automation
-           HARNESS_API_KEY: ${{ secrets.SCS_API_KEY }}
-           TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
-           ATTEST: false  
-  
-      # Step 12: Run SLSA Verification Action
-
-      - name: SLSA Verification
-        uses: harness/github-actions/slsa-verification@1.1.0
-        with:
-          HARNESS_ACCOUNT_URL: https://qa.harness.io
-          HARNESS_ACCOUNT_ID: ppbLW9YpRharzPs_JtWT7g
-          HARNESS_ORG_ID: SSCA
-          HARNESS_PROJECT_ID: SSCA_Sanity_Automation
-          HARNESS_API_KEY: ${{ secrets.SCS_API_KEY }}
-          TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
-          VERIFY: false   
+           POLICY_SET_REF: 'policy_for_at'    
