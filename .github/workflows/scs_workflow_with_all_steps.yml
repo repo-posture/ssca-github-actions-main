@@ -27,7 +27,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Set Vault Environment Variables
+      - name: Set Docker Environment Variables
         run: |
           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV
           echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> $GITHUB_ENV
@@ -55,6 +55,10 @@ jobs:
           # Generate key pair with empty password for automation
           COSIGN_PASSWORD="" cosign generate-key-pair
           echo "Cosign key pair generated successfully"
+          # Set environment variables for Cosign keys
+          echo "COSIGN_KEY=$(pwd)/cosign.key" >> $GITHUB_ENV
+          echo "COSIGN_PUBLIC_KEY=$(pwd)/cosign.pub" >> $GITHUB_ENV
+          echo "COSIGN_PASSWORD=" >> $GITHUB_ENV
           # Display public key for reference
           echo "Public Key:"
           cat cosign.pub
@@ -73,7 +77,9 @@ jobs:
           TOOL: Syft
           FORMAT: spdx-json
           ATTEST: true
-          KMS_KEY: 'cosign'
+          KMS_KEY: ${{ env.COSIGN_KEY }}
+        env:
+          COSIGN_PASSWORD: ""
     
 
           
@@ -90,7 +96,9 @@ jobs:
            TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
            VERIFY: true
            POLICY_SET_REF: 'policy_for_at'
-           KMS_KEY: 'cosign'
+           KMS_KEY: ${{ env.COSIGN_PUBLIC_KEY }}
+         env:
+           COSIGN_PASSWORD: ""
 
      # Step 11: Run SLSA Generation Action
 
@@ -104,7 +112,9 @@ jobs:
            HARNESS_API_KEY: ${{ secrets.SCS_API_KEY }}
            TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
            ATTEST: true
-           KMS_KEY: 'cosign'  
+           KMS_KEY: ${{ env.COSIGN_KEY }}
+         env:
+           COSIGN_PASSWORD: ""  
   
       # Step 12: Run SLSA Verification Action
 
@@ -118,4 +128,6 @@ jobs:
           HARNESS_API_KEY: ${{ secrets.SCS_API_KEY }}
           TARGET: ${{ secrets.DOCKER_USERNAME }}/easy-buggy-app:demo1
           VERIFY: true
-          KMS_KEY: 'cosign'   
+          KMS_KEY: ${{ env.COSIGN_PUBLIC_KEY }}
+        env:
+          COSIGN_PASSWORD: ""   
